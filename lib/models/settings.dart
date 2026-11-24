@@ -34,6 +34,7 @@ class AppSettings with ChangeNotifier {
   static const String _prefsDisableBrowserCache = 'disableBrowserCache';
   static const String _prefsCleanCookies = 'cleanCookies';
   static const String _prefsLowResourceMode = 'lowResourceMode';
+  static const String _prefsDeveloperMode = 'developerMode';
   static const String _prefsHomeJurisdiction = 'homeJurisdiction';
   static const String _prefsSiteJurisdictions = 'siteJurisdictions';
   static const int _maxSiteJurisdictions = 255;
@@ -57,6 +58,7 @@ class AppSettings with ChangeNotifier {
   bool _disableBrowserCache = false;
   bool _cleanCookies = false;
   bool _lowResourceMode = false;
+  bool _developerMode = false;
   String? _homeJurisdiction; // null = from device locale
   Map<String, String> _siteJurisdictions = {}; // domain -> jurisdiction
 
@@ -85,6 +87,9 @@ class AppSettings with ChangeNotifier {
   /// hidden, require a tap before media plays, and let the system reclaim
   /// memory from hidden pages.
   bool get lowResourceMode => _lowResourceMode;
+
+  /// Shows the Developer tools entry and unlocks developer-only features.
+  bool get developerMode => _developerMode;
 
   /// Fallback jurisdiction for sites whose legal home isn't detected;
   /// null = from the device locale.
@@ -333,6 +338,14 @@ class AppSettings with ChangeNotifier {
     }
   }
 
+  set developerMode(bool value) {
+    if (_developerMode != value) {
+      _developerMode = value;
+      _saveSetting(_prefsDeveloperMode, value);
+      notifyListeners();
+    }
+  }
+
   /// Manually chosen legal home for a site (by registrable domain).
   String? siteJurisdiction(String domain) => _siteJurisdictions[domain];
 
@@ -387,6 +400,7 @@ class AppSettings with ChangeNotifier {
     _disableBrowserCache = _prefs!.getBool(_prefsDisableBrowserCache) ?? false;
     _cleanCookies = _prefs!.getBool(_prefsCleanCookies) ?? false;
     _lowResourceMode = _prefs!.getBool(_prefsLowResourceMode) ?? false;
+    _developerMode = _prefs!.getBool(_prefsDeveloperMode) ?? false;
     final home = _prefs!.getString(_prefsHomeJurisdiction);
     _homeJurisdiction = (home == null || home.isEmpty) ? null : home;
     try {
@@ -427,6 +441,7 @@ class AppSettings with ChangeNotifier {
     _disableBrowserCache = false;
     _cleanCookies = false;
     _lowResourceMode = false;
+    _developerMode = false;
 
     // Save the default values
     _saveAllSettings();
@@ -448,6 +463,7 @@ class AppSettings with ChangeNotifier {
     await _saveSetting(_prefsDisableBrowserCache, _disableBrowserCache);
     await _saveSetting(_prefsCleanCookies, _cleanCookies);
     await _saveSetting(_prefsLowResourceMode, _lowResourceMode);
+    await _saveSetting(_prefsDeveloperMode, _developerMode);
   }
 
   // Theme categories and metadata

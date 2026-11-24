@@ -2,6 +2,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 import 'package:view_source_vibe/models/settings.dart';
 import 'package:view_source_vibe/screens/about_screen.dart';
+import 'package:view_source_vibe/screens/developer_tools_screen.dart';
 import 'package:view_source_vibe/services/url_history_service.dart';
 import 'package:view_source_vibe/services/html_service.dart';
 import 'package:view_source_vibe/services/jurisdiction.dart';
@@ -102,6 +103,31 @@ class SettingsScreen extends StatelessWidget {
                         onChanged: (value) => settings.wrapText = value,
                       ),
                     ),
+                  ]),
+                  const SectionLabel('Developer'),
+                  SectionBox(children: [
+                    _settingsTile(
+                      context: context,
+                      icon: Icons.code,
+                      title: 'Developer mode',
+                      description:
+                          'Show developer tools and advanced features',
+                      control: Switch(
+                        value: settings.developerMode,
+                        onChanged: (value) => settings.developerMode = value,
+                      ),
+                    ),
+                    if (settings.developerMode)
+                      ListTile(
+                        leading: const Icon(Icons.terminal),
+                        title: const Text('Developer tools'),
+                        trailing: const Icon(Icons.chevron_right),
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => const DeveloperToolsScreen(),
+                          ),
+                        ),
+                      ),
                   ]),
                   const SectionLabel('Loading pages'),
                   SectionBox(children: [
