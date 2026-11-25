@@ -15,6 +15,10 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.47.6'
+      - name: Restore fixed debug key
+        run: |
+          mkdir -p ~/.android
+          echo "${{ secrets.DEBUG_KEYSTORE_B64 }}" | base64 -d > ~/.android/debug.keystore
       - run: flutter pub get
       - run: flutter build apk --debug
       - uses: actions/upload-artifact@v4
