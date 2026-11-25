@@ -1,3 +1,4 @@
+import 'package:view_source_vibe/screens/server_source_screen.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:provider/provider.dart';
@@ -259,6 +260,22 @@ class Toolbar extends StatelessWidget {
               tooltip: 'Export Inspection Package',
               onPressed:
                   hasFile ? () => _exportInspectionPackage(context) : null,
+            );
+          },
+        ),
+        Selector<HtmlService, String?>(
+          selector: (context, service) => service.serverSourceUrl,
+          builder: (context, url, child) {
+            return IconButton(
+              icon: const Icon(Icons.dns_outlined),
+              tooltip: 'Get server source',
+              onPressed: url == null
+                  ? null
+                  : () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => ServerSourceScreen(url: url),
+                        ),
+                      ),
             );
           },
         ),

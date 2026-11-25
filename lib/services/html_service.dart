@@ -1253,6 +1253,14 @@ class HtmlService extends ChangeNotifier {
     return target.url;
   }
 
+  /// http(s) URL of the page being viewed, or null for local files.
+  String? get serverSourceUrl {
+    final uri = _sovereigntyUri;
+    if (uri == null) return null;
+    if (uri.scheme != 'http' && uri.scheme != 'https') return null;
+    return uri.toString();
+  }
+
   String get _sovereigntyHost => _sovereigntyUri?.host ?? '';
 
   bool get _sovereigntyReady {
